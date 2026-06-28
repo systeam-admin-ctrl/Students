@@ -36,6 +36,17 @@
     "info": "جيد جدا",
     "phone": "+201004553806",
     "group": "الصف الأول الثانوي",
-    "_file": "students.json"
+    "_file": "students.json",
+    "fees": {
+      "أغسطس": false,
+      "سبتمبر": false,
+      "أكتوبر": false,
+      "نوفمبر": true,
+      "ديسمبر": true,
+      "يناير": false,
+      "فبراير": false,
+      "مارس": true,
+      "أبريل": false
+    }
   }
 }
