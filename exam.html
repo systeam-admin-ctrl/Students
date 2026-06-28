@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الامتحان الإلكتروني</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --primary-dark: #2980b9;
+            --secondary-color: #1abc9c;
+            --secondary-dark: #16a085;
+            --danger-color: #e74c3c;
+            --danger-dark: #c0392b;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --warning-color: #f39c12;
+            --warning-dark: #d35400;
+            --success-color: #2ecc71;
+            --success-dark: #27ae60;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+        
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 15px 20px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-align: center;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+        
+        .header-title {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .timer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .timer i {
+            margin-left: 5px;
+        }
+        
+        .timer.warning {
+            background-color: var(--warning-color);
+            animation: pulse 1s infinite;
+        }
+        
+        .timer.danger {
+            background-color: var(--danger-color);
+            animation: pulse 0.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 2000;
+            backdrop-filter: blur(3px);
+        }
+        
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transform: translateY(-20px);
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-content h2 {
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+        }
+        
+        .modal-content p {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            color: #555;
+            line-height: 1.7;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Tajawal';
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 120px;
+        }
+        
+        .btn i {
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--secondary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: var(--danger-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: var(--success-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .grade-section {
+            padding: 25px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            padding-right: 15px;
+            border-right: 4px solid var(--primary-color);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            bottom: -5px;
+            width: 50%;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+        
+        .grade-levels {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .grade-level {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            padding: 25px 20px;
+            cursor: pointer;
+            border-top: 5px solid var(--primary-color);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .grade-level::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(26, 188, 156, 0.1));
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .grade-level:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .grade-level:hover::before {
+            opacity: 1;
+        }
+        
+        .grade-level i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            transition: var(--transition);
+        }
+        
+        .grade-level:hover i {
+            transform: scale(1.1);
+            color: var(--primary-dark);
+        }
+        
+        .grade-level h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+        
+        .grade-level p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .exam-container {
+            display: none;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 30px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .exam-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .exam-title {
+            font-size: 1.4rem;
+            color: var(--dark-color);
+            font-weight: 700;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            margin: 20px 0;
+            height: 12px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            width: 0%;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+        
+        .progress-bar::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, 
+                          rgba(255, 255, 255, 0.2) 0%, 
+                          rgba(255, 255, 255, 0.4) 50%, 
+                          rgba(255, 255, 255, 0.2) 100%);
+            background-size: 200% auto;
+            animation: shimmer 1.5s infinite linear;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .question-container {
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: var(--dark-color);
+            line-height: 1.7;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .option:hover {
+            background-color: #f1f3f5;
+            border-color: var(--primary-color);
+        }
+        
+        .option.selected {
+            background-color: #e3f2fd;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+        }
+        
+        .option.correct {
+            background-color: #e8f5e9;
+            border-color: var(--success-color);
+        }
+        
+        .option.incorrect {
+            background-color: #ffebee;
+            border-color: var(--danger-color);
+        }
+        
+        .option input {
+            margin-left: 12px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+        
+        .option label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 15px;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            margin-top: 20px;
+            display: none;
+            padding: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .result-container {
+            display: none;
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 40px 30px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .result-icon {
+            font-size: 5rem;
+            margin-bottom: 25px;
+            transition: var(--transition);
+        }
+        
+        .result-container.success {
+            border-top: 5px solid var(--success-color);
+        }
+        
+        .result-container.failure {
+            border-top: 5px solid var(--danger-color);
+        }
+        
+        .result-container.timeout {
+            border-top: 5px solid var(--warning-color);
+        }
+        
+        .success .result-icon {
+            color: var(--success-color);
+            animation: bounce 0.8s;
+        }
+        
+        .failure .result-icon, .timeout .result-icon {
+            color: var(--danger-color);
+            animation: shake 0.8s;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .result-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+            font-weight: 700;
+        }
+        
+        .result-score {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 25px 0;
+            color: var(--primary-dark);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .result-score::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 3px;
+        }
+        
+        .result-details {
+            text-align: right;
+            margin-top: 30px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: var(--border-radius);
+        }
+        
+        .result-details p {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            color: #555;
+        }
+        
+        .result-details span {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .badge-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .badge-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .badge-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        /* تحسينات للهواتف المحمولة */
+        @media (max-width: 768px) {
+            header {
+                padding: 12px 15px;
+                font-size: 1.1rem;
+            }
+            
+            .timer {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .grade-section {
+                padding: 15px 10px;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+                margin-bottom: 15px;
+            }
+            
+            .grade-levels {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 15px;
+            }
+            
+            .grade-level {
+                padding: 20px 15px;
+            }
+            
+            .grade-level i {
+                font-size: 2rem;
+                margin-bottom: 10px;
+            }
+            
+            .exam-container, .result-container {
+                margin: 20px 15px;
+                padding: 20px 15px;
+            }
+            
+            .exam-title {
+                font-size: 1.2rem;
+            }
+            
+            .question-text {
+                font-size: 1.1rem;
+                margin-bottom: 15px;
+            }
+            
+            .option {
+                padding: 12px;
+            }
+            
+            .option label {
+                font-size: 1rem;
+            }
+            
+            .result-title {
+                font-size: 1.5rem;
+            }
+            
+            .result-score {
+                font-size: 2rem;
+            }
+            
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .grade-levels {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                padding: 20px 15px;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+            }
+            
+            .result-icon {
+                font-size: 4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-title">منصة الامتحانات الإلكترونية</div>
+        <div class="timer" id="timer"><i class="fas fa-clock"></i> <span id="timer-text">30:00</span></div>
+    </header>
+
+    <div class="grades-page" id="gradesPage">
+        <div class="grade-section">
+            <h2 class="section-title">المرحلة الابتدائية</h2>
+            <div class="grade-levels">
+                <div class="grade-level" onclick="selectGradeWithSubjects('primary1')">
+                    <i class="fas fa-child"></i>
+                    <h3>الصف الأول</h3>
+                    <p>الابتدائي</p>
+                </div>
+                <div class="grade-level" onclick="selectGradeWithSubjects('primary2')">
+                    <i class="fas fa-child"></i>
+                    <h3>الصف الثاني</h3>
+                    <p>الابتدائي</p>
+                </div>
+                <div class="grade-level" onclick="selectGradeWithSubjects('primary3')">
+                    <i class="fas fa-child"></i>
+                    <h3>الصف الثالث</h3>
+                    <p>الابتدائي</p>
+                </div>
+                <div class="grade-level" onclick="selectGradeWithSubjects('primary4')">
+                    <i class="fas fa-user-graduate"></i>
+                    <h3>الصف الرابع</h3>
+                    <p>الابتدائي</p>
+                </div>
+                <div class="grade-level" onclick="selectGradeWithSubjects('primary5')">
+                    <i class="fas fa-user-graduate"></i>
+                    <h3>الصف الخامس</h3>
+                    <p>الابتدائي</p>
+                </div>
+                <div class="grade-level" onclick="selectGradeWithSubjects('primary6')">
+                    <i class="fas fa-user-graduate"></i>
+                    <h3>الصف السادس</h3>
+                    <p>الابتدائي</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grade-section">
+            <h2 class="section-title">المرحلة الإعدادية</h2>
+            <div class="grade-levels">
+                <div class="grade-level" onclick="selectGradeWithSubjects('middle1')">
+                    <i class="fas fa-user-graduate"></i>
+                    <h3>الصف الأول</h3>
+                    <p>الإعدادي</p>
+                </div>
+                <div class="grade-level" onclick="selectGradeWithSubjects('middle2')">
+                    <i class="fas fa-user-graduate"></i>
+                    <h3>الصف الثاني</h3>
+                    <p>الإعدادي</p>
+                </div>
+                <div class="grade-level" onclick="selectGradeWithSubjects('middle3')">
+                    <i class="fas fa-user-graduate"></i>
+                    <h3>الصف الثالث</h3>
+                    <p>الإعدادي</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grade-section">
+            <h2 class="section-title">المرحلة الثانوية</h2>
+            <div class="grade-levels">
+                <div class="grade-level" onclick="selectGradeWithSubjects('secondary1')">
+                    <i class="fas fa-user-tie"></i>
+                    <h3>الصف الأول</h3>
+                    <p>الثانوي</p>
+                </div>
+                <div class="grade-level" onclick="selectGradeWithSubjects('secondary2')">
+                    <i class="fas fa-user-tie"></i>
+                    <h3>الصف الثاني</h3>
+                    <p>الثانوي</p>
+                </div>
+                <div class="grade-level" onclick="selectGradeWithSubjects('secondary3')">
+                    <i class="fas fa-user-tie"></i>
+                    <h3>الصف الثالث</h3>
+                    <p>الثانوي</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة اختيار المادة -->
+    <div class="modal" id="subjectModal">
+        <div class="modal-content">
+            <h2>اختر المادة</h2>
+            <p>اختر المادة التي تريد أداء الامتحان فيها</p>
+            <div id="subjectButtons" class="modal-buttons"></div>
+        </div>
+    </div>
+
+    <!-- نافذة تأكيد بدء الامتحان -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <h2>تأكيد بدء الامتحان</h2>
+            <p id="examInfoText"></p>
+            <div class="modal-buttons">
+                <button class="btn btn-danger" onclick="closeModal('confirmModal')">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+                <button class="btn btn-success" onclick="startExamConfirmed()">
+                    <i class="fas fa-play"></i> بدء الامتحان
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- واجهة الامتحان -->
+    <div class="exam-container" id="examContainer">
+        <div class="exam-header">
+            <div class="exam-title" id="examTitle"></div>
+            <div class="timer" id="examTimer"><i class="fas fa-clock"></i> <span id="exam-timer-text">30:00</span></div>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div id="questionsContainer"></div>
+        
+        <div class="navigation-buttons">
+            <button class="btn btn-primary" id="prevBtn" onclick="navigateQuestion(-1)">
+                <i class="fas fa-arrow-right"></i> السابق
+            </button>
+            <button class="btn btn-primary" id="nextBtn" onclick="navigateQuestion(1)">
+                التالي <i class="fas fa-arrow-left"></i>
+            </button>
+        </div>
+        
+        <button class="btn btn-success submit-btn" id="submitBtn" onclick="submitExam()">
+            <i class="fas fa-paper-plane"></i> تسليم الإجابات
+        </button>
+    </div>
+
+    <!-- نافذة النتائج -->
+    <div class="result-container" id="resultContainer">
+        <div class="result-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h2 class="result-title" id="resultTitle">تهانينا! لقد أكملت الامتحان</h2>
+        <div class="result-score" id="resultScore">85%</div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="resultProgressBar"></div>
+        </div>
+        
+        <div class="result-details">
+            <p>عدد الأسئلة: <span id="totalQuestions">10</span></p>
+            <p>الإجابات الصحيحة: <span id="correctAnswers">8</span></p>
+            <p>الإجابات الخاطئة: <span id="wrongAnswers">2</span></p>
+            <p>الوقت المستغرق: <span id="timeTaken">15:30</span></p>
+        </div>
+        
+        <button class="btn btn-primary" onclick="backToHome()" style="margin-top: 30px;">
+            <i class="fas fa-home"></i> العودة للصفحة الرئيسية
+        </button>
+    </div>
+
+    <script>
+        // بنك الأسئلة (يمكن استبداله ببيانات من قاعدة بيانات أو ملف JSON)
+        const questionBank = {
+            primary1: {
+                math: [
+                    {
+                        question: "ما ناتج جمع 5 + 3؟",
+                        options: ["7", "8", "9", "6"],
+                        answer: 1
+                    },
+                    {
+                        question: "ما العدد الذي يلي 9؟",
+                        options: ["8", "10", "11", "9"],
+                        answer: 1
+                    },
+                    {
+                        question: "ما ناتج طرح 7 - 2؟",
+                        options: ["4", "5", "6", "3"],
+                        answer: 1
+                    },
+                    {
+                        question: "كم عدد الأصابع في اليد الواحدة؟",
+                        options: ["4", "5", "6", "3"],
+                        answer: 1
+                    },
+                    {
+                        question: "ما العدد الذي يسبق 10؟",
+                        options: ["9", "11", "8", "12"],
+                        answer: 0
+                    }
+                ],
+                arabic: [
+                    {
+                        question: "ما الحرف الأول في كلمة 'أسد'؟",
+                        options: ["س", "أ", "د", "و"],
+                        answer: 1
+                    },
+                    {
+                        question: "ما جمع كلمة 'كتاب'؟",
+                        options: ["كتب", "كُتيب", "مكتب", "كاتب"],
+                        answer: 0
+                    },
+                    {
+                        question: "ما عكس كلمة 'كبير'؟",
+                        options: ["طويل", "قصير", "صغير", "ضخم"],
+                        answer: 2
+                    },
+                    {
+                        question: "ما نوع الجملة 'السماء صافية'؟",
+                        options: ["خبرية", "إنشائية", "استفهامية", "تعجبية"],
+                        answer: 0
+                    }
+                ]
+            },
+            primary4: {
+                math: [
+                    {
+                        question: "ما ناتج ضرب 6 × 7؟",
+                        options: ["42", "36", "48", "49"],
+                        answer: 0
+                    },
+                    {
+                        question: "ما العدد الذي إذا ضربناه في نفسه يعطي 64؟",
+                        options: ["7", "8", "9", "6"],
+                        answer: 1
+                    },
+                    {
+                        question: "ما ناتج قسمة 81 ÷ 9؟",
+                        options: ["8", "9", "7", "10"],
+                        answer: 1
+                    },
+                    {
+                        question: "ما محيط مربع طول ضلعه 5 سم؟",
+                        options: ["10 سم", "15 سم", "20 سم", "25 سم"],
+                        answer: 2
+                    },
+                    {
+                        question: "إذا كان عمر أحمد ضعف عمر علي، وعمر علي 8 سنوات، فكم عمر أحمد؟",
+                        options: ["10 سنوات", "12 سنة", "16 سنة", "18 سنة"],
+                        answer: 2
+                    }
+                ],
+                science: [
+                    {
+                        question: "أي من هذه الكواكب أقرب إلى الشمس؟",
+                        options: ["الزهرة", "المريخ", "عطارد", "الأرض"],
+                        answer: 2
+                    },
+                    {
+                        question: "ما العملية التي يقوم بها النبات لصنع غذائه؟",
+                        options: ["التنفس", "البناء الضوئي", "التخمر", "التبخر"],
+                        answer: 1
+                    },
+                    {
+                        question: "أي من هذه الحيوانات يعتبر من اللافقاريات؟",
+                        options: ["الأسد", "الدلفين", "قنديل البحر", "التمساح"],
+                        answer: 2
+                    },
+                    {
+                        question: "ما الغاز الذي نتنفسه؟",
+                        options: ["الأكسجين", "ثاني أكسيد الكربون", "النيتروجين", "الهيدروجين"],
+                        answer: 0
+                    }
+                ]
+            },
+            secondary1: {
+                math: [
+                    {
+                        question: "ما قيمة س في المعادلة: 2س + 5 = 15؟",
+                        options: ["5", "10", "7.5", "20"],
+                        answer: 0
+                    },
+                    {
+                        question: "ما مساحة مثلث قاعدته 10 سم وارتفاعه 6 سم؟",
+                        options: ["16 سم²", "30 سم²", "60 سم²", "25 سم²"],
+                        answer: 1
+                    },
+                    {
+                        question: "ما قيمة جتا 60°؟",
+                        options: ["√3/2", "1/2", "√2/2", "1"],
+                        answer: 1
+                    },
+                    {
+                        question: "إذا كانت س = 3، ص = 2، فما قيمة 2س² - ص؟",
+                        options: ["14", "16", "18", "20"],
+                        answer: 1
+                    }
+                ],
+                physics: [
+                    {
+                        question: "ما وحدة قياس القوة في النظام الدولي؟",
+                        options: ["الجول", "النيوتن", "الواط", "الباسكال"],
+                        answer: 1
+                    },
+                    {
+                        question: "أي من هذه الكميات يعتبر كمية قياسية؟",
+                        options: ["القوة", "السرعة", "الكتلة", "الإزاحة"],
+                        answer: 2
+                    },
+                    {
+                        question: "ما القانون الذي يربط بين القوة والكتلة والتسارع؟",
+                        options: ["قانون أوم", "قانون نيوتن الثاني", "قانون بويل", "قانون كولوم"],
+                        answer: 1
+                    },
+                    {
+                        question: "ما نوع الطاقة التي يمتلكها الجسم بسبب حركته؟",
+                        options: ["طاقة وضع", "طاقة حرارية", "طاقة حركية", "طاقة كامنة"],
+                        answer: 2
+                    }
+                ]
+            }
+        };
+
+        // متغيرات الامتحان
+        let currentExam = {
+            grade: '',
+            subject: '',
+            questions: [],
+            currentQuestionIndex: 0,
+            answers: [],
+            startTime: null,
+            timerInterval: null,
+            timeLimit: 30 * 60, // 30 دقيقة بالثواني
+            timeRemaining: 30 * 60
+        };
+
+        // عرض مواد كل صف
+        const subjectsByGrade = {
+            primary1: ["الرياضيات", "اللغة العربية"],
+            primary2: ["الرياضيات", "اللغة العربية"],
+            primary3: ["الرياضيات", "اللغة العربية"],
+            primary4: ["الرياضيات", "العلوم", "اللغة العربية", "الدراسات الاجتماعية"],
+            primary5: ["الرياضيات", "العلوم", "اللغة العربية", "الدراسات الاجتماعية"],
+            primary6: ["الرياضيات", "العلوم", "اللغة العربية", "الدراسات الاجتماعية"],
+            middle1: ["الرياضيات", "العلوم", "اللغة العربية", "اللغة الإنجليزية", "الدراسات الاجتماعية"],
+            middle2: ["الرياضيات", "العلوم", "اللغة العربية", "اللغة الإنجليزية", "الدراسات الاجتماعية"],
+            middle3: ["الرياضيات", "العلوم", "اللغة العربية", "اللغة الإنجليزية", "الدراسات الاجتماعية"],
+            secondary1: ["الرياضيات", "الفيزياء", "الكيمياء", "الأحياء", "اللغة العربية"],
+            secondary2: ["الرياضيات", "الفيزياء", "الكيمياء", "الأحياء", "اللغة العربية"],
+            secondary3: ["الرياضيات", "الفيزياء", "الكيمياء", "الأحياء", "اللغة العربية"]
+        };
+
+        // عرض مواد الصف عند النقر عليه
+        function selectGradeWithSubjects(grade) {
+            const modal = document.getElementById("subjectModal");
+            const container = document.getElementById("subjectButtons");
+            container.innerHTML = "";
+
+            if (!subjectsByGrade[grade]) {
+                alert("لا توجد مواد متاحة لهذا الصف حالياً");
+                return;
+            }
+
+            subjectsByGrade[grade].forEach(subject => {
+                const btn = document.createElement("button");
+                btn.className = "btn btn-primary";
+                btn.innerHTML = `<i class="fas fa-book"></i> ${subject}`;
+                btn.onclick = () => {
+                    closeModal("subjectModal");
+                    showExamConfirmation(grade, subject);
+                };
+                container.appendChild(btn);
+            });
+            showModal("subjectModal");
+        }
+
+        // عرض نافذة تأكيد بدء الامتحان
+        function showExamConfirmation(grade, subject) {
+            const examInfoText = document.getElementById("examInfoText");
+            
+            // تحقق من وجود أسئلة لهذا الصف والمادة
+            if (!questionBank[grade] || !questionBank[grade][subject] || questionBank[grade][subject].length === 0) {
+                alert("عذراً، لا توجد أسئلة متاحة لهذا الامتحان حالياً");
+                return;
+            }
+            
+            examInfoText.textContent = `أنت على وشك بدء امتحان ${subject} للصف ${getGradeName(grade)}. سيكون لديك 30 دقيقة للإجابة على ${questionBank[grade][subject].length} أسئلة.`;
+            
+            // حفظ معلومات الامتحان
+            currentExam.grade = grade;
+            currentExam.subject = subject;
+            currentExam.questions = [...questionBank[grade][subject]];
+            currentExam.answers = new Array(questionBank[grade][subject].length).fill(null);
+            currentExam.currentQuestionIndex = 0;
+            currentExam.timeRemaining = currentExam.timeLimit;
+            
+            showModal("confirmModal");
+        }
+
+        // الحصول على اسم الصف بشكل مقروء
+        function getGradeName(grade) {
+            const gradeNames = {
+                primary1: "الأول الابتدائي",
+                primary2: "الثاني الابتدائي",
+                primary3: "الثالث الابتدائي",
+                primary4: "الرابع الابتدائي",
+                primary5: "الخامس الابتدائي",
+                primary6: "السادس الابتدائي",
+                middle1: "الأول الإعدادي",
+                middle2: "الثاني الإعدادي",
+                middle3: "الثالث الإعدادي",
+                secondary1: "الأول الثانوي",
+                secondary2: "الثاني الثانوي",
+                secondary3: "الثالث الثانوي"
+            };
+            return gradeNames[grade] || grade;
+        }
+
+        // بدء الامتحان بعد التأكيد
+        function startExamConfirmed() {
+            closeModal("confirmModal");
+            document.getElementById("gradesPage").style.display = "none";
+            document.getElementById("examContainer").style.display = "block";
+            document.getElementById("timer").style.display = "flex";
+            
+            // تعيين عنوان الامتحان
+            document.getElementById("examTitle").textContent = 
+                `${currentExam.subject} - الصف ${getGradeName(currentExam.grade)}`;
+            
+            // بدء المؤقت
+            startTimer();
+            
+            // عرض السؤال الأول
+            displayQuestion();
+        }
+
+        // بدء المؤقت
+        function startTimer() {
+            currentExam.startTime = new Date();
+            updateTimerDisplay();
+            
+            clearInterval(currentExam.timerInterval);
+            currentExam.timerInterval = setInterval(() => {
+                currentExam.timeRemaining--;
+                updateTimerDisplay();
+                
+                if (currentExam.timeRemaining <= 0) {
+                    clearInterval(currentExam.timerInterval);
+                    submitExam(true); // إرسال تلقائي عند انتهاء الوقت
+                }
+            }, 1000);
+        }
+
+        // تحديث عرض المؤقت
+        function updateTimerDisplay() {
+            const minutes = Math.floor(currentExam.timeRemaining / 60);
+            const seconds = currentExam.timeRemaining % 60;
+            const timerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            document.getElementById("timer-text").textContent = timerText;
+            document.getElementById("exam-timer-text").textContent = timerText;
+            
+            // تغيير اللون عندما يقل الوقت
+            const timerElements = [
+                document.getElementById("timer"),
+                document.getElementById("examTimer")
+            ];
+            
+            timerElements.forEach(timer => {
+                timer.classList.remove("warning", "danger");
+                
+                if (currentExam.timeRemaining <= 300) { // 5 دقائق
+                    timer.classList.add("warning");
+                }
+                if (currentExam.timeRemaining <= 60) { // دقيقة واحدة
+                    timer.classList.add("danger");
+                }
+            });
+        }
+
+        // عرض السؤال الحالي
+        function displayQuestion() {
+            const question = currentExam.questions[currentExam.currentQuestionIndex];
+            const questionsContainer = document.getElementById("questionsContainer");
+            
+            // تحديث شريط التقدم
+            const progress = ((currentExam.currentQuestionIndex + 1) / currentExam.questions.length) * 100;
+            document.getElementById("progressBar").style.width = `${progress}%`;
+            
+            // بناء واجهة السؤال
+            let questionHTML = `
+                <div class="question-container">
+                    <div class="question-text">
+                        السؤال ${currentExam.currentQuestionIndex + 1}: ${question.question}
+                    </div>
+                    <div class="options-container">
+            `;
+            
+            question.options.forEach((option, index) => {
+                const isSelected = currentExam.answers[currentExam.currentQuestionIndex] === index;
+                questionHTML += `
+                    <div class="option ${isSelected ? 'selected' : ''}" onclick="selectOption(${index})">
+                        <input type="radio" name="answer" id="option-${index}" 
+                               ${isSelected ? 'checked' : ''}>
+                        <label for="option-${index}">${option}</label>
+                    </div>
+                `;
+            });
+            
+            questionHTML += `</div></div>`;
+            questionsContainer.innerHTML = questionHTML;
+            
+            // تحديث أزرار التنقل
+            document.getElementById("prevBtn").disabled = currentExam.currentQuestionIndex === 0;
+            document.getElementById("nextBtn").style.display = 
+                currentExam.currentQuestionIndex === currentExam.questions.length - 1 ? "none" : "block";
+            document.getElementById("submitBtn").style.display = 
+                currentExam.currentQuestionIndex === currentExam.questions.length - 1 ? "block" : "none";
+        }
+
+        // اختيار إجابة
+        function selectOption(optionIndex) {
+            currentExam.answers[currentExam.currentQuestionIndex] = optionIndex;
+            
+            // إعادة عرض السؤال لتحديث حالة الاختيار
+            const options = document.querySelectorAll(".option");
+            options.forEach((option, idx) => {
+                option.classList.toggle("selected", idx === optionIndex);
+                option.querySelector("input").checked = idx === optionIndex;
+            });
+        }
+
+        // التنقل بين الأسئلة
+        function navigateQuestion(direction) {
+            const newIndex = currentExam.currentQuestionIndex + direction;
+            if (newIndex >= 0 && newIndex < currentExam.questions.length) {
+                currentExam.currentQuestionIndex = newIndex;
+                displayQuestion();
+                
+                // التمرير إلى أعلى الصفحة لرؤية السؤال الجديد
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // تسليم الامتحان
+        function submitExam(timeout = false) {
+            clearInterval(currentExam.timerInterval);
+            
+            // حساب النتيجة
+            const totalQuestions = currentExam.questions.length;
+            let correctAnswers = 0;
+            
+            currentExam.questions.forEach((question, index) => {
+                if (currentExam.answers[index] === question.answer) {
+                    correctAnswers++;
+                }
+            });
+            
+            const score = Math.round((correctAnswers / totalQuestions) * 100);
+            const timeTaken = Math.floor((new Date() - currentExam.startTime) / 1000);
+            const minutesTaken = Math.floor(timeTaken / 60);
+            const secondsTaken = timeTaken % 60;
+            
+            // عرض النتائج
+            showResults(score, totalQuestions, correctAnswers, minutesTaken, secondsTaken, timeout);
+        }
+
+        // عرض النتائج
+        function showResults(score, totalQuestions, correctAnswers, minutes, seconds, timeout) {
+            document.getElementById("examContainer").style.display = "none";
+            const resultContainer = document.getElementById("resultContainer");
+            const resultTitle = document.getElementById("resultTitle");
+            const resultIcon = resultContainer.querySelector(".result-icon i");
+            
+            // تحديد حالة النتيجة
+            if (timeout) {
+                resultTitle.textContent = "انتهى وقت الامتحان!";
+                resultContainer.className = "result-container timeout";
+                resultIcon.className = "fas fa-clock";
+            } else if (score >= 70) {
+                resultTitle.textContent = "تهانينا! لقد نجحت في الامتحان";
+                resultContainer.className = "result-container success";
+                resultIcon.className = "fas fa-check-circle";
+            } else {
+                resultTitle.textContent = "للأسف لم تحقق النجاح هذه المرة";
+                resultContainer.className = "result-container failure";
+                resultIcon.className = "fas fa-times-circle";
+            }
+            
+            // تعيين بيانات النتيجة
+            document.getElementById("resultScore").textContent = `${score}%`;
+            document.getElementById("totalQuestions").textContent = totalQuestions;
+            document.getElementById("correctAnswers").textContent = correctAnswers;
+            document.getElementById("wrongAnswers").textContent = totalQuestions - correctAnswers;
+            document.getElementById("timeTaken").textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // تحديث شريط التقدم في النتائج
+            document.getElementById("resultProgressBar").style.width = `${score}%`;
+            
+            // عرض نافذة النتائج
+            resultContainer.style.display = "block";
+            
+            // التمرير إلى أعلى الصفحة لرؤية النتائج
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // العودة إلى الصفحة الرئيسية
+        function backToHome() {
+            document.getElementById("resultContainer").style.display = "none";
+            document.getElementById("gradesPage").style.display = "block";
+            document.getElementById("timer").style.display = "none";
+            
+            // إعادة تعيين متغيرات الامتحان
+            currentExam.currentQuestionIndex = 0;
+            currentExam.answers = new Array(currentExam.questions.length).fill(null);
+            
+            // التمرير إلى أعلى الصفحة
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // عرض نافذة
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add("active");
+        }
+
+        // إغلاق نافذة
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove("active");
+        }
+
+        // إغلاق النوافذ عند النقر خارجها
+        window.onclick = function(e) {
+            if (e.target.classList.contains("modal")) {
+                document.querySelectorAll(".modal").forEach(modal => {
+                    modal.classList.remove("active");
+                });
+            }
+        };
+
+        // إغلاق النوافذ عند الضغط على زر ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "Escape") {
+                document.querySelectorAll(".modal").forEach(modal => {
+                    modal.classList.remove("active");
+                });
+            }
+        });
+    </script>
+</body>
+</html>

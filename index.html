@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جار التحميل...</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+        
+        .loading-container {
+            text-align: center;
+            position: relative;
+            width: 300px;
+        }
+        
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+        
+        .logo-inner {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 4px solid transparent;
+            border-top-color: #8B4513;
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+        }
+        
+        .logo-inner:nth-child(2) {
+            animation-delay: 0.3s;
+            border-top-color: rgba(139, 69, 19, 0.7);
+        }
+        
+        .logo-inner:nth-child(3) {
+            animation-delay: 0.6s;
+            border-top-color: rgba(139, 69, 19, 0.4);
+        }
+        
+        .loading-text {
+            margin-top: 40px;
+            color: #8B4513;
+            font-size: 20px;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .loading-text::after {
+            content: "...";
+            position: absolute;
+            animation: dots 1.5s infinite steps(3);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 2px;
+            background-color: rgba(139, 69, 19, 0.2);
+            margin-top: 30px;
+            overflow: hidden;
+            border-radius: 1px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background-color: #8B4513;
+            border-radius: 1px;
+            transition: width 0.4s ease;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: "."; }
+            40% { content: ".."; }
+            60%, 100% { content: "..."; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <div class="logo">
+            <div class="logo-inner"></div>
+            <div class="logo-inner"></div>
+            <div class="logo-inner"></div>
+        </div>
+        
+        <div class="loading-text">جار التحميل</div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+    </div>
+
+    <script>
+        // محاكاة التحميل مع تأثيرات واقعية
+        let progress = 0;
+        const progressBar = document.getElementById('progress');
+        const loadingText = document.querySelector('.loading-text');
+        const texts = ["جار التحميل", "جاري تجهيز البيانات", "جارٍ التهيئة النهائية"];
+        let textIndex = 0;
+        
+        const interval = setInterval(() => {
+            // زيادة التقدم بشكل غير خطي لمظهر أكثر واقعية
+            progress += Math.random() * (progress < 80 ? 5 : 2);
+            if (progress > 100) progress = 100;
+            
+            progressBar.style.width = progress + '%';
+            
+            // تغيير النص أثناء التحميل
+            if (progress > (textIndex + 1) * 30) {
+                textIndex = Math.min(textIndex + 1, 2);
+                loadingText.textContent = texts[textIndex];
+            }
+            
+            if (progress >= 100) {
+                clearInterval(interval);
+                loadingText.textContent = "اكتمل التحميل!";
+                
+                // الانتقال بعد تأخير بسيط
+                setTimeout(() => {
+                    window.location.href = 'code.html';
+                }, 800);
+            }
+        }, 200);
+    </script>
+</body>
+</html>

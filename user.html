@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بطاقة الطالب</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary-color: #4cc9f0;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-color: #f8f9fa;
+            --dark-color: #2c3e50;
+            --gray-color: #95a5a6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: white;
+            height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            border-bottom-right-radius: 30px;
+            border-bottom-left-radius: 30px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        .back-btn {
+            position: absolute;
+            right: 20px;
+            top: 25px;
+            color: white;
+            font-size: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #e0e0e0, #f5f5f5);
+            margin: 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: var(--gray-color);
+            overflow: hidden;
+            border: 4px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .profile-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .student-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+        
+        .student-grade {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        
+        .section {
+            padding: 18px 25px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .section:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 18px;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .section-content {
+            flex: 1;
+        }
+        
+        .section-title {
+            font-size: 15px;
+            color: var(--gray-color);
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .section-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-color);
+            line-height: 1.4;
+        }
+        
+        .rating {
+            color: var(--warning-color);
+            font-weight: bold;
+        }
+        
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 500px;
+            background-color: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid #eee;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.03);
+        }
+        
+        .footer-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--gray-color);
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+        
+        .footer-btn i {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        
+        .footer-btn.active {
+            color: var(--primary-color);
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .footer-btn:hover {
+            transform: translateY(-3px);
+        }
+        
+        .fee-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed #eee;
+        }
+        
+        .fee-amount {
+            font-weight: 700;
+            color: var(--danger-color);
+            font-size: 18px;
+        }
+        
+        .success-badge {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success-color);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-block;
+            font-weight: 600;
+        }
+        
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 400px) {
+            .header {
+                padding: 20px 15px;
+            }
+            
+            .profile-img {
+                width: 85px;
+                height: 85px;
+                font-size: 30px;
+            }
+            
+            .section {
+                padding: 15px 20px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header Section -->
+        <div class="header">
+            <a href="home.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div class="profile-img">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <div class="student-name" id="studentName"></div>
+            <div class="student-grade" id="studentGrade"></div>
+        </div>
+        
+        <!-- Student Info Sections -->
+        <div class="section">
+            <div class="icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="section-content">
+                <div class="section-title">الصف الدراسي</div>
+                <div class="section-value" id="studentMain"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="icon">
+                <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div class="section-content">
+                <div class="section-title">العنوان</div>
+                <div class="section-value">طنطا </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="icon">
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="section-content">
+                <div class="section-title">تقدير الشهر</div>
+                <div class="section-value">
+                    <span class="success-badge" id="studentInfo"></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="section-content">
+                <div class="section-title">موعد الدرس</div>
+                <div class="section-value"><a href="page7.html">عرض الجدول <i class="fas fa-external-link-alt" style="font-size: 14px; margin-right: 5px;"></i></a></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="icon">
+                <i class="fas fa-money-bill-wave"></i>
+            </div>
+            <div class="section-content">
+               
+            </div>
+        </div>
+        
+        <!-- Footer Navigation -->
+        <div class="footer">
+            <a href="home.html" class="footer-btn active">
+                <i class="fas fa-home"></i>
+                <span>الرئيسية</span>
+            </a>
+    
+            <a href="setting.html" class="footer-btn">
+                <i class="fas fa-cog"></i>
+                <span>الإعدادات</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // استرجاع بيانات الطالب من localStorage
+            const studentData = JSON.parse(localStorage.getItem('studentData'));
+
+            // التحقق من وجود بيانات الطالب
+            if (studentData) {
+                document.getElementById('studentName').textContent = studentData.name;
+                document.getElementById('studentGrade').textContent = studentData.grade;
+                document.getElementById('studentMain').textContent = studentData.main;
+                document.getElementById('studentInfo').textContent = studentData.info;
+            } else {
+                // إعادة التوجيه إلى صفحة إدخال الكود إذا لم تكن هناك بيانات
+                window.location.href = 'code.html';
+            }
+
+            // تفاعلات الأزرار
+            const footerBtns = document.querySelectorAll('.footer-btn');
+            footerBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    if (!this.href.includes('facebook.com')) {
+                        e.preventDefault();
+                        footerBtns.forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        setTimeout(() => {
+                            window.location.href = this.href;
+                        }, 300);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

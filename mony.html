@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مصاريف الطالب</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600&display=swap');
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: #3c5c81;
+      color: white;
+      padding: 15px 20px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    header h1 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    
+    .back-btn {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: white;
+      color: #3c5c81;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      width: 95%;
+      max-width: 500px;
+      margin: 20px auto;
+      background-color: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .student-name {
+      text-align: center;
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      color: #3c5c81;
+      font-weight: 600;
+      padding: 0 10px;
+    }
+
+    .month-card {
+      background-color: #fdfdfd;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 12px 15px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      transition: all 0.2s ease;
+    }
+
+    .month-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+
+    .status {
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+
+    .paid {
+      color: #2e7d32;
+    }
+
+    .unpaid {
+      color: #c62828;
+    }
+
+    /* المربعات الإحصائية */
+    .stats-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      gap: 15px;
+    }
+    
+    .stat-box {
+      flex: 1;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .paid-box {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #a5d6a7;
+    }
+    
+    .unpaid-box {
+      background-color: #ffebee;
+      color: #c62828;
+      border: 1px solid #ef9a9a;
+    }
+    
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 5px 0;
+    }
+    
+    .stat-label {
+      font-size: 0.9rem;
+    }
+
+    /* رسالة عندما لا توجد بيانات */
+    .no-data {
+      text-align: center;
+      color: #757575;
+      padding: 20px;
+      font-size: 1rem;
+    }
+
+    /* تحسينات للشاشات الصغيرة جدًا */
+    @media (max-width: 400px) {
+      header h1 {
+        font-size: 1rem;
+        padding: 0 30px;
+      }
+      
+      .back-btn {
+        padding: 4px 8px;
+        font-size: 0.7rem;
+      }
+      
+      .student-name {
+        font-size: 1.1rem;
+      }
+      
+      .month-card {
+        padding: 10px 12px;
+      }
+      
+      .status {
+        font-size: 0.85rem;
+      }
+      
+      .stats-container {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>مصاريف الطالب</h1>
+    <a class="back-btn" href="home.html">← الرجوع</a>
+  </header>
+
+  <div class="container">
+    <div class="student-name">
+      الطالب: <span id="studentName">جارٍ التحميل...</span>
+    </div>
+    <div id="feesList"></div>
+    
+    <!-- المربعات الإحصائية -->
+    <div class="stats-container">
+      <div class="stat-box paid-box">
+        <div class="stat-label">الأشهر المدفوعة</div>
+        <div class="stat-number" id="paidMonths">0</div>
+      </div>
+      <div class="stat-box unpaid-box">
+        <div class="stat-label">الأشهر غير المدفوعة</div>
+        <div class="stat-number" id="unpaidMonths">0</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const studentId = localStorage.getItem("studentId");
+    const studentNameEl = document.getElementById("studentName");
+    const feesList = document.getElementById("feesList");
+    const paidMonthsEl = document.getElementById("paidMonths");
+    const unpaidMonthsEl = document.getElementById("unpaidMonths");
+
+    // التحقق من وجود studentId
+    if (!studentId) {
+        studentNameEl.textContent = "لم يتم تحديد طالب";
+        feesList.innerHTML = '<div class="no-data">الرجاء اختيار طالب أولاً</div>';
+    } else {
+        // جلب البيانات من ملف JSON
+        fetch("students.json")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("فشل في جلب البيانات");
+                }
+                return response.json();
+            })
+            .then(students => {
+                displayFeesData(students);
+            })
+            .catch(error => {
+                handleError(error);
+            });
+    }
+
+    function displayFeesData(students) {
+        const student = students[studentId];
+        let paidCount = 0;
+        let unpaidCount = 0;
+
+        if (student) {
+            studentNameEl.textContent = student.name;
+
+            if (student.fees && Object.keys(student.fees).length > 0) {
+                // فرز الأشهر حسب الأحدث
+                const sortedMonths = Object.entries(student.fees).sort((a, b) => {
+                    // يمكن إضافة منطق الفرز هنا إذا كانت الأشهر قابلة للفرز
+                    return 0;
+                });
+
+                sortedMonths.forEach(([month, paid]) => {
+                    const card = document.createElement("div");
+                    card.className = "month-card";
+
+                    const monthLabel = document.createElement("div");
+                    monthLabel.textContent = month;
+
+                    const statusEl = document.createElement("div");
+                    statusEl.className = "status";
+
+                    if (paid) {
+                        statusEl.textContent = "✔️ مدفوع";
+                        statusEl.classList.add("paid");
+                        paidCount++;
+                    } else {
+                        statusEl.textContent = "❌ غير مدفوع";
+                        statusEl.classList.add("unpaid");
+                        unpaidCount++;
+                    }
+
+                    card.appendChild(monthLabel);
+                    card.appendChild(statusEl);
+                    feesList.appendChild(card);
+                });
+
+                // تحديث المربعات الإحصائية
+                paidMonthsEl.textContent = paidCount;
+                unpaidMonthsEl.textContent = unpaidCount;
+            } else {
+                feesList.innerHTML = '<div class="no-data">لا توجد بيانات مصاريف لهذا الطالب</div>';
+            }
+        } else {
+            studentNameEl.textContent = "بيانات الطالب غير موجودة.";
+            feesList.innerHTML = '<div class="no-data">الطالب غير مسجل في النظام</div>';
+        }
+    }
+
+    function handleError(error) {
+        studentNameEl.textContent = "حدث خطأ أثناء تحميل البيانات";
+        feesList.innerHTML = '<div class="no-data">تعذر تحميل بيانات المصاريف. يرجى المحاولة لاحقاً</div>';
+        console.error("فشل تحميل البيانات:", error);
+    }
+  </script>
+
+</body>
+</html>

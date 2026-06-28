@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>إعدادات الطالب</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --danger-color: #f72585;
+            --warning-color: #f8961e;
+            --info-color: #4895ef;
+            --text-primary: #2b2d42;
+            --text-secondary: #6c757d;
+        }
+
+        .dark-mode {
+            --primary-color: #3a0ca3;
+            --secondary-color: #480ca8;
+            --accent-color: #560bad;
+            --light-color: #212529;
+            --dark-color: #f8f9fa;
+            --success-color: #4361ee;
+            --danger-color: #7209b7;
+            --warning-color: #b5179e;
+            --info-color: #4895ef;
+            --text-primary: #f8f9fa;
+            --text-secondary: #adb5bd;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Tajawal', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 0;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dark-mode body {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+        }
+
+        .container {
+            flex: 1;
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            background-color: var(--light-color);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (min-width: 500px) {
+            .container {
+                max-width: 500px;
+                margin: 20px auto;
+                border-radius: 20px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            }
+            
+            .dark-mode .container {
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            }
+            
+            .container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 10px;
+                background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            }
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .dark-mode .header {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .profile-img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            margin-left: 15px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        /* إحصاءات الحضور والغياب */
+        .attendance-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background-color: var(--light-color);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .present-stat {
+            border-top: 4px solid var(--success-color);
+        }
+
+        .absent-stat {
+            border-top: 4px solid var(--danger-color);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 5px 0;
+        }
+
+        .present-value {
+            color: var(--success-color);
+        }
+
+        .absent-value {
+            color: var(--danger-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-right: 4px solid var(--accent-color);
+            padding-right: 15px;
+            font-size: 1.5rem;
+            margin: 30px 0 20px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 15px 20px;
+            margin: 12px 0;
+            background-color: var(--light-color);
+            border: none;
+            border-radius: 12px;
+            text-align: right;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            color: var(--dark-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.3));
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover::after {
+            transform: translateX(100%);
+        }
+
+        .btn i {
+            margin-left: 10px;
+            font-size: 1.2rem;
+        }
+
+        #developerBtn {
+            background-color: var(--info-color);
+            color: white;
+        }
+
+        #messageBtn {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        #anotherCodeBtn {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        #logoutBtn {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .dark-mode-btn {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            margin: 20px 0;
+            background-color: var(--light-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
+        .modal-content {
+            background-color: var(--light-color);
+            margin: 10% auto;
+            padding: 25px;
+            border-radius: 15px;
+            width: 85%;
+            max-width: 500px;
+            color: var(--dark-color);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from {transform: translateY(-50px); opacity: 0;}
+            to {transform: translateY(0); opacity: 1;}
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: var(--danger-color);
+        }
+
+        .developer-img {
+            width: 150px;
+            height: 150px;
+            display: block;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--primary-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .form-group input, 
+        .form-group textarea {
+            width: 90%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, 
+        .form-group textarea:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .send-btn {
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            width: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .send-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--light-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 90;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--dark-color);
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.3s;
+            padding: 5px 10px;
+            border-radius: 10px;
+        }
+
+        .nav-item i {
+            font-size: 22px;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+            transition: all 0.3s;
+        }
+
+        .nav-item.active {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+
+        .nav-item.active i,
+        .nav-item:hover i {
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        .nav-item.active,
+        .nav-item:hover {
+            color: var(--accent-color);
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="صورة الطالب" class="profile-img" id="studentImage">
+            <div class="user-info">
+                <h3 class="user-name" id="studentName">جارٍ التحميل...</h3>
+            </div>
+        </div>
+
+        <!-- إحصاءات الحضور والغياب -->
+        <div class="attendance-stats">
+            <div class="stat-card present-stat">
+                <div class="stat-value present-value" id="presentDays">0</div>
+                <div class="stat-label">أيام الحضور</div>
+            </div>
+            <div class="stat-card absent-stat">
+                <div class="stat-value absent-value" id="absentDays">0</div>
+                <div class="stat-label">أيام الغياب</div>
+            </div>
+        </div>
+
+        <h2>الإعدادات</h2>
+        
+        <button class="btn" id="developerBtn">
+            <span>معلومات المطور</span>
+            <i class="fas fa-user-tie"></i>
+        </button>
+        
+        <button class="btn" id="messageBtn">
+            <span>إرسال رسالة</span>
+            <i class="fas fa-paper-plane"></i>
+        </button>
+        
+        <div class="dark-mode-btn">
+            <span>الوضع المظلم</span>
+            <label class="switch">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+        
+        <button class="btn" onclick="window.location.href='user.html'">
+            <span>معلومات الطالب</span>
+            <i class="fas fa-user"></i>
+        </button>
+        
+        <h2>الحساب</h2>
+        
+        <button class="btn" id="anotherCodeBtn">
+            <span>تغيير الحساب</span>
+            <i class="fas fa-exchange-alt"></i>
+        </button>
+        
+        <button class="btn" id="logoutBtn">
+            <span>تسجيل الخروج</span>
+            <i class="fas fa-sign-out-alt"></i>
+        </button>
+    </div>
+
+    <!-- Developer Modal -->
+    <div id="developerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <img src="photo_2025-06-16_00-57-23.JPG" alt="صورة المطور" class="developer-img">
+            <h2>معلومات المطور</h2>
+            <p><strong><i class="fas fa-user"></i> الاسم:</strong> Mahmoud Mohamed</p>
+            <p><strong><i class="fas fa-phone"></i> رقم الهاتف:</strong> <a href="tel:+201123961290">01123961290</a></p>
+            <p><strong><i class="fas fa-envelope"></i> البريد الإلكتروني:</strong> <a href="mailto:dev@example.com">coldenegypt@gmail.com</a></p>
+            <p><strong><i class="fas fa-info-circle"></i> معلومات إضافية:</strong> I'm Front-end developer and app developer</p>
+        </div>
+    </div>
+
+    <!-- Message Modal -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-paper-plane"></i> إرسال رسالة</h2>
+            <form id="messageForm">
+                <div class="form-group">
+                    <label for="name"><i class="fas fa-user"></i> الاسم:</label>
+                    <input type="text" id="name" required placeholder="أدخل اسمك">
+                </div>
+                <div class="form-group">
+                    <label for="phone"><i class="fas fa-phone"></i> رقم الهاتف:</label>
+                    <input type="tel" id="phone" required placeholder="أدخل رقم هاتفك">
+                </div>
+                <div class="form-group">
+                    <label for="message"><i class="fas fa-comment"></i> الرسالة:</label>
+                    <textarea id="message" rows="4" required placeholder="أدخل رسالتك"></textarea>
+                </div>
+                <button type="submit" class="send-btn">
+                    <i class="fas fa-paper-plane"></i> إرسال  
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="home.html" class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>الرئيسية</span>
+        </a>
+
+        <a href="user.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>الملف الشخصي</span>
+        </a>
+        <a href="code.html" class="nav-item">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>تسجيل الخروج</span>
+        </a>
+    </div>
+
+    <script>
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('change', function() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', this.checked);
+        });
+
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+        }
+
+        // Modals functionality
+        const setupModal = (btnId, modalId) => {
+            const btn = document.getElementById(btnId);
+            const modal = document.getElementById(modalId);
+            const close = modal.querySelector('.close');
+
+            btn.addEventListener('click', () => modal.style.display = 'block');
+            close.addEventListener('click', () => modal.style.display = 'none');
+            
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        };
+
+        setupModal('developerBtn', 'developerModal');
+        setupModal('messageBtn', 'messageModal');
+
+        // Message Form
+        document.getElementById('messageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const message = document.getElementById('message').value;
+            
+            const whatsappUrl = `https://wa.me/201150929598?text=الاسم:%20${encodeURIComponent(name)}%0Aرقم%20الهاتف:%20${encodeURIComponent(phone)}%0Aالرسالة:%20${encodeURIComponent(message)}`;
+            
+            window.open(whatsappUrl, '_blank');
+            document.getElementById('messageModal').style.display = 'none';
+            this.reset();
+        });
+
+        // Navigation buttons
+        function clearDataAndRedirect() {
+            // Show loading spinner
+            document.getElementById('loading').style.display = 'flex';
+            
+            // Clear all student data from localStorage
+            localStorage.removeItem('studentId');
+            localStorage.removeItem('studentData');
+            
+            // Redirect after a short delay to allow spinner to show
+            setTimeout(() => {
+                window.location.href = 'code.html';
+            }, 500);
+        }
+
+        document.getElementById('anotherCodeBtn').addEventListener('click', clearDataAndRedirect);
+        document.getElementById('logoutBtn').addEventListener('click', clearDataAndRedirect);
+
+        // Bottom navigation active state
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Load student data from students.json
+        async function loadStudentData() {
+            try {
+                // Show loading spinner
+                document.getElementById('loading').style.display = 'flex';
+                
+                // Get student ID from localStorage
+                const studentId = localStorage.getItem('studentId');
+                if (!studentId) {
+                    window.location.href = 'code.html';
+                    return;
+                }
+
+                // Fetch students data
+                const response = await fetch('students.json');
+                if (!response.ok) {
+                    throw new Error('Failed to load student data');
+                }
+                
+                const studentsData = await response.json();
+                const studentData = studentsData[studentId];
+                
+                if (!studentData) {
+                    window.location.href = 'code.html';
+                    return;
+                }
+
+                // Display student info
+                document.getElementById('studentName').textContent = studentData.name || 'غير محدد';
+                
+                // Calculate and display attendance stats
+                if (studentData.attendance) {
+                    let presentCount = 0;
+                    let absentCount = 0;
+                    
+                    // Count present and absent days
+                    Object.values(studentData.attendance).forEach(status => {
+                        if (status === 'حاضر') presentCount++;
+                        if (status === 'غائب') absentCount++;
+                    });
+                    
+                    // Update the UI
+                    document.getElementById('presentDays').textContent = presentCount;
+                    document.getElementById('absentDays').textContent = absentCount;
+                }
+            } catch (error) {
+                console.error('Error loading student data:', error);
+                window.location.href = 'code.html';
+            } finally {
+                // Hide loading spinner
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        // Load student data when page loads
+        document.addEventListener('DOMContentLoaded', loadStudentData);
+    </script>
+</body>
+</html>

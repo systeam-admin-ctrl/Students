@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>منصة VD.C التعليمية</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+      min-height: 100vh;
+      padding: 15px;
+      padding-bottom: 80px;
+    }
+
+    ::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 10px 0;
+      position: relative;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      color: #6a5acd;
+      font-size: 22px;
+      font-weight: 700;
+      text-shadow: 1px 1px 3px rgba(106, 90, 205, 0.2);
+    }
+
+    .student-badge {
+      background: linear-gradient(135deg, #6a5acd 0%, #9370db 100%);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(106, 90, 205, 0.25);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      min-width: 120px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* أضفت هذا الجزء للصورة الدائرية */
+    .profile-image-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .profile-image {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    /* قائمة الأيقونات المنسدلة */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropbtn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      color: #6a5acd;
+      font-size: 16px;
+      border: none;
+      outline: none;
+    }
+
+    .dropbtn:hover, .dropbtn:focus {
+      background: #6a5acd;
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      left: 0;
+      background-color: #fff;
+      min-width: 140px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .dropdown-content a {
+      color: #555;
+      padding: 10px 14px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
+      font-size: 14px;
+    }
+
+    .dropdown-content a i {
+      width: 18px;
+      text-align: center;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f5f5f5;
+      color: #6a5acd;
+      padding-right: 16px;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 15px;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: 12px;
+      padding: 15px 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      border-top: 3px solid;
+      text-decoration: none;
+    }
+
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    .feature-title {
+      color: #333;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.08);
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #666;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      padding: 5px 10px;
+      border-radius: 8px;
+    }
+
+    .nav-item i {
+      font-size: 18px;
+      margin-bottom: 3px;
+    }
+
+    .nav-item.active {
+      color: #6a5acd;
+      transform: translateY(-5px);
+    }
+
+    .nav-item:hover {
+      color: #6a5acd;
+    }
+
+    .nav-label {
+      font-size: 11px;
+    }
+
+    /* تحسينات للشاشات الصغيرة جدًا */
+    @media (max-width: 360px) {
+      .content {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 12px;
+      }
+      
+      .feature-card {
+        padding: 12px 8px;
+      }
+      
+      .feature-icon {
+        width: 50px;
+        height: 50px;
+      }
+      
+      .feature-title {
+        font-size: 13px;
+      }
+      
+      .student-badge {
+        min-width: 100px;
+        font-size: 12px;
+        padding: 6px 12px;
+      }
+      
+      /* تعديل حجم الصورة للشاشات الصغيرة */
+      .profile-image {
+        width: 32px;
+        height: 32px;
+      }
+    }
+
+    /* تحسينات للوضع الأفقي */
+    @media (max-height: 500px) {
+      .content {
+        grid-template-columns: repeat(auto-fit, minmax(11px, 1fr));
+      }
+      
+      .feature-icon {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo-container">
+      <div class="logo"></div>
+      <div class="profile-image-container">
+        <!-- الصورة الدائرية -->
+        <img id="profileImage" class="profile-image" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="صورة الطالب">
+        <div class="student-badge" id="studentName">
+          <i class="fas fa-user-graduate" style="margin-left: 6px;"></i>
+          <span id="nameText"></span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- قائمة الأيقونات المنسدلة -->
+    <div class="dropdown">
+      <button class="dropbtn">
+        <i class="fas fa-ellipsis-v"></i>
+      </button>
+      <div class="dropdown-content">
+        <a href="user.html"><i class="fas fa-user"></i> الملف الشخصي</a>
+        <a href="setting.html"><i class="fas fa-cog"></i> الإعدادات</a>
+        <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <a href="exam.html" class="feature-card" style="border-top-color: #8a2be2;">
+      <img src="https://cdn-icons-gif.flaticon.com/18675/18675124.gif" alt="الإمتحانات" class="feature-icon">
+      <h3 class="feature-title">الإمتحانات</h3>
+    </a>
+
+    <a href="page2.html" class="feature-card" style="border-top-color: #9370db;">
+      <img src="https://cdn-icons-gif.flaticon.com/12340/12340775.gif" alt="الغياب والحضور" class="feature-icon">
+      <h3 class="feature-title">الغياب والحضور</h3>
+    </a>
+    
+    <a href="mony.html" class="feature-card" style="border-top-color: #9932cc;">
+      <img src="https://cdn-icons-gif.flaticon.com/19013/19013012.gif" alt="المصاريف الشهرية" class="feature-icon">
+      <h3 class="feature-title">المصاريف الشهرية</h3>
+    </a>
+    
+  
+        
+    <a href="page7.html" class="feature-card" style="border-top-color: #8a2be2;">
+      <img src="https://cdn-icons-gif.flaticon.com/11784/11784642.gif" alt="جدول الحصص" class="feature-icon">
+      <h3 class="feature-title">جدول الحصص</h3>
+    </a>
+    
+    <a href="tel:++201097292334⁩" class="feature-card" style="border-top-color: #9370db;">
+      <img src="https://cdn-icons-gif.flaticon.com/15374/15374776.gif" alt="تواصل مع المعلم" class="feature-icon">
+      <h3 class="feature-title">تواصل مع المعلم</h3>
+    </a>
+
+     <a href="pa.html" class="feature-card" style="border-top-color: #9370db;">
+      <img src="https://cdn-icons-gif.flaticon.com/16678/16678003.gif" alt="تواصل مع المعلم" class="feature-icon">
+      <h3 class="feature-title">الملحوظات</h3>
+    </a>
+     <a href="posts.html" class="feature-card" style="border-top-color: #9370db;">
+      <img src="https://cdn-icons-gif.flaticon.com/16075/16075689.gif" alt="تواصل مع المعلم" class="feature-icon">
+      <h3 class="feature-title">المنشورات</h3>
+    </a>
+  </div>
+
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="window.location.href='home.html'">
+      <i class="fas fa-home"></i>
+      <span class="nav-label">الرئيسية</span>
+    </div>
+    <div class="nav-item" onclick="window.location.href='user.html'">
+      <i class="fas fa-user"></i>
+      <span class="nav-label">الملف الشخصي</span>
+    </div>
+    <div class="nav-item" onclick="window.location.href='posts.html'">
+      <i class="fas fa-blog"></i>
+      <span class="nav-label">المنشورات</span>
+    </div>
+    <div class="nav-item" onclick="logout()">
+      <i class="fas fa-sign-out-alt"></i>
+      <span class="nav-label">تسجيل خروج</span>
+    </div>
+  </div>
+
+  <script>
+    // استرجاع بيانات الطالب من localStorage
+    const studentData = JSON.parse(localStorage.getItem('studentData'));
+    const profileImage = localStorage.getItem('studentProfileImage');
+
+    // التحقق من وجود بيانات الطالب
+    if (studentData && studentData.name) {
+        document.getElementById('nameText').textContent = studentData.name;
+        
+        // تقصير الاسم إذا كان طويلاً
+        const name = studentData.name.split(' ');
+        if (name.length > 2) {
+          document.getElementById('nameText').textContent = name[0] + ' ' + name[1];
+        }
+        
+        // عرض الصورة إذا وجدت
+        if (profileImage) {
+          document.getElementById('profileImage').src = profileImage;
+        }
+    } else {
+        window.location.href = 'code.html';
+    }
+
+    // وظيفة تسجيل الخروج
+    function logout() {
+      // مسح بيانات الجلسة
+      localStorage.removeItem('studentData');
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('studentProfileImage');
+      
+      // إضافة تأثير قبل الانتقال
+      document.body.style.opacity = '0';
+      document.body.style.transition = 'opacity 0.3s ease';
+      
+      setTimeout(() => {
+        window.location.href = 'code.html';
+      }, 300);
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      logout();
+    });
+
+    // إضافة تأثيرات عند التحميل
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.feature-card');
+      cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+          card.style.transition = `all 0.5s ease-out ${index * 0.1}s`;
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, 100);
+      });
+      
+      // تحسين الأداء على الهواتف
+      if ('ontouchstart' in window) {
+        document.body.classList.add('touch-device');
+      }
+    });
+    
+    // منع التكبير بالنقر المزدوج على الهواتف
+    document.addEventListener('dblclick', function(e) {
+      e.preventDefault();
+    }, { passive: false });
+  </script>
+</body>
+</html>
